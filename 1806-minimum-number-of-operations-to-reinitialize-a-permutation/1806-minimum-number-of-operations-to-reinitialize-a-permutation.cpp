@@ -1,36 +1,19 @@
 class Solution {
 public:
     int reinitializePermutation(int n) {
-        vector<int> perm, arr(n,0), orig(n,0);
-        int count=0, x=0;
+        vector<int> perm(n), arr(n); 
+        for (int i = 0; i < n; ++i) perm[i] = arr[i] = i; 
         
-        for(int i=0; i<n; i++)
-        {
-            orig[i]=i;
-        }
-        perm = orig;
-        
-        while(arr!=orig)
-        {
-            for(int i=0; i<n; i++)
-            {    
-                if(i%2==0)
-                {
-                    arr[i] = perm[i/2];
-                }
-
-                else if(i%2==1)
-                {
-                    x = n/2 + (i-1)/2;
-                    arr[i] = perm[x];
-                }
+        for (int k = 1; ; ++k) {
+            vector<int> tmp = arr; 
+            bool flag = true; 
+            for (int i = 0; i < n; ++i) {
+                if (i&1) arr[i] = tmp[n/2 + (i-1)/2]; 
+                else arr[i] = tmp[i/2]; 
+                if (perm[i] != arr[i]) flag = false; 
             }
-            
-            perm = arr;
-            count++;
+            if (flag) return k; 
         }
-        
-        
-        return count;
+        return 0; 
     }
 };
