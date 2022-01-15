@@ -7,21 +7,13 @@ public:
         {
             if(plants[i]<=capacity)
             {
-                X++;
-                count++;
                 capacity=capacity-plants[i];
+                count++;
             }
             else
             {
-                for(int j=X; j>0; j--)
-                {
-                    X--;
-                    count++;
-                    capacity=k;
-                }
-                X=X+(i+1);
-                count=count+X;
-                capacity=capacity-plants[i];
+                capacity=k-plants[i];
+                count+=(i*2)+1;
             }
         }
         
