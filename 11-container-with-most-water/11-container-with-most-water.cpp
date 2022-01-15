@@ -10,15 +10,16 @@ public:
         
         while(lo<hi)
         {
-            area = (hi-lo) * min(height[lo], height[hi]);
-            areaMax = max(area, areaMax);
-            
             if(height[lo]<=height[hi])
             {
+                area = (hi-lo) * min(height[lo], height[hi]);
+                areaMax = max(area, areaMax);
                 lo++;
             }
-            else
+            else if(height[lo]>height[hi])
             {
+                area = (hi-lo) * min(height[lo], height[hi]);
+            areaMax = max(area, areaMax);
                 hi--;
             }
             
