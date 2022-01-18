@@ -10,28 +10,36 @@
  * };
  */
 class Solution {
-public:
-    int deepestLeavesSum(TreeNode* root) {
+private:
+
+    void recursive(TreeNode* node, int& sum, int depth, int deepest)
+    {
+        if(node==NULL) return;
+        
+        if(depth==deepest)
+        {
+            sum+=node->val;
+        }
+        
+        recursive(node->left, sum, depth+1, deepest);
+        recursive(node->right, sum, depth+1, deepest);
+    }
+    
+    int maxDepth(TreeNode* root)
+    {
         if(root==NULL) return 0;
         
-        queue<TreeNode*> q;
-        int sum=0;
-        q.push(root);
+        int lh=maxDepth(root->left);
+        int rh=maxDepth(root->right);
         
-        while(!q.empty())
-        {
-            int size=q.size();
-            sum=0;
-            for(int i=0; i<size; i++)
-            {
-                TreeNode* node=q.front();
-                q.pop();
-                
-                sum+=node->val;
-                if(node->left) q.push(node->left);
-                if(node->right) q.push(node->right); 
-            }
-        }
+        return 1+max(lh, rh);
+    }
+    
+public:
+    int deepestLeavesSum(TreeNode* root) {
+        int sum=0;
+        int deepest=maxDepth(root);
+        recursive(root, sum,1, deepest);
         
         return sum;
     }
