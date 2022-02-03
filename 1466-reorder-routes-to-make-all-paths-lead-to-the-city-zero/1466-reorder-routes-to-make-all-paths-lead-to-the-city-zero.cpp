@@ -5,6 +5,7 @@ public:
         vector<vector<int>> adj(n), back(n);
         queue<int> q;
         q.push(0);
+        visited[0] = 1;
         int ans = 0;
         
         for (auto c : connections){
@@ -15,18 +16,21 @@ public:
         while (!q.empty()){
             int curr = q.front();
             q.pop();
-            visited[curr] = 1;
-
-            // change dir for all arrows facing out
+            
             for (auto a: adj[curr]){
                 if (!visited[a]){
                     ans++;
                     q.push(a);
+                    visited[curr] = 1;
                 }
             }
-            // push other nodes so we visit everything
+
             for (auto b: back[curr]){
-                if (!visited[b]) q.push(b);
+                if (!visited[b]) 
+                {
+                    q.push(b);
+                    visited[curr] = 1;
+                }
             }
         }
         return ans;
