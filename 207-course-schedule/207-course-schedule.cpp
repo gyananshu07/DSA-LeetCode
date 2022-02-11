@@ -26,7 +26,7 @@ public:
         
         for(auto p: prerequisites)
         {
-            graph[p[0]].push_back(p[1]);
+            graph[p[1]].push_back(p[0]);
         }
         
         for(int i=0; i<n; i++)
