@@ -1,42 +1,41 @@
 class Solution {
-private:
-    int f(int i, int prevInd, vector<int>& nums, vector<vector<int>> &dp)
-    {
-        if(i==nums.size())
-        {
-            return 0;
-        }
-        
-        if(dp[i][prevInd+1] != -1 ) return dp[i][prevInd+1];
-        
-        int len = 0 + f(i+1, prevInd, nums, dp); //notTake
-            
-        if(prevInd == -1 || nums[i]>nums[prevInd])
-        {
-            len = max(len, 1 + f(i+1, i, nums, dp)); //take
-        }
-        
-        return dp[i][prevInd+1] = len;
-    }
 public:
     int lengthOfLIS(vector<int>& nums) {
-        int n = nums.size();
-        int maxi=1;
-        
+        int n =  nums.size();
         vector<int> dp(n, 1);
+        vector<int> hash(n, 0);
         
-        for(int i = 0 ; i<n; i++)
+        int maxi = 1;
+        int lastIndex = 0;
+        
+        for(int i=0; i<n; i++)
         {
+            hash[i]=i;
             for(int prev=0; prev<i; prev++)
             {
-                if(nums[prev]<nums[i])
+                if(nums[i]>nums[prev] && 1+dp[prev]>dp[i])
                 {
-                    dp[i] = max(1+dp[prev], dp[i]);
+                    dp[i] = 1 + dp[prev];  //increase the count of IS
+                    hash[i] = prev; //update the prev index in hash 
                 }
             }
             
-            maxi = max(maxi, dp[i]);
+            if(dp[i]>maxi) //max of all IS length
+            {
+                maxi = dp[i];
+                lastIndex = i;  //stores the max of index to iterate in the hash
+            }
         }
+        
+        vector<int> temp;
+        temp.push_back(nums[lastIndex]);
+        while(hash[lastIndex] !=lastIndex)
+        {
+            lastIndex = hash[lastIndex];
+            temp.push_back(nums[lastIndex]);
+        }
+        
         return maxi;
+        
     }
 };
