@@ -1,26 +1,31 @@
 class Solution {
 public:
-    void recur(int ind, int tar, vector<int>& c, vector<vector<int>>& ans, vector<int>& ds){
-        if(tar==0){
+    void combination(int currIndex, int target, vector<int>& candidates, vector<int> &ds, vector<vector<int>>& ans){
+        if(target==0)
+        {
             ans.push_back(ds);
-            return;
+             return;
         }
-        for(int i=ind;i<c.size();i++){
-            if(i>ind && c[i]==c[i-1]) continue;
-            if(c[i]>tar) break;
-            
-            ds.push_back(c[i]);
-            recur(i+1, tar-c[i], c, ans, ds);
+           
+        for(int i=currIndex; i<candidates.size(); i++)
+        {
+            if(i>currIndex && candidates[i] == candidates[i-1]) continue;
+            if(target < candidates[i])
+            {
+                break;
+            }
+                
+            ds.push_back(candidates[i]);
+            combination(i+1, target-candidates[i], candidates, ds, ans);
             ds.pop_back();
         }
     }
     
-    vector<vector<int>> combinationSum2(vector<int>& c, int target) {
-        sort(c.begin(), c.end());
-        int n=c.size();
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
         vector<vector<int>> ans;
-        vector<int> ds;
-        recur(0, target, c, ans, ds);
+        vector<int> currComb;
+        combination(0, target, candidates, currComb, ans);
         return ans;
     }
 };
