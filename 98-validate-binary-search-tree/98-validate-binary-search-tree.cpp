@@ -15,7 +15,7 @@ public:
     bool solve(TreeNode* root, long long int min,long long int max){
         if(!root)return true;
         
-        if(root->val>=max || root->val<=min)return false;
+        if(root->val>=max || root->val<=min) return false;
         
         return solve(root->left,min,root->val) and solve(root->right,root->val,max);
     }
