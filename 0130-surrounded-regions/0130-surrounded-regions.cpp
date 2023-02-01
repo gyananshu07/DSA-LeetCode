@@ -1,4 +1,25 @@
 class Solution {
+private: 
+    void dfs(int r, int c, vector<vector<int>> &vis, vector<vector<char>>& board, int dr[], int dc[])
+    {
+        vis[r][c] = 1;
+        
+        int n= board.size();
+        int m= board[0].size();
+        
+        for (int i=0; i<4; i++)
+        {
+            int nr = r + dr[i];
+            int nc = c + dc[i];
+
+            if (nr>=0 && nr<n && nc>=0 && nc<m
+                && !vis[nr][nc] && board[nr][nc]=='O' )
+            {
+                dfs(nr, nc, vis, board, dr, dc);
+            }
+        }
+        
+    }
 public:
     void solve(vector<vector<char>>& board) {
         int n= board.size();
@@ -8,41 +29,38 @@ public:
         
         queue<pair<int,int>> q;
         
-        for (int i=0; i<n; i++)
+        int dr[] = {0, 1, 0, -1};
+        int dc[] = {1, 0, -1, 0};
+        
+        // first row & last row
+        for (int j=0; j<m; j++)
         {
-            for (int j=0; j<m; j++)
+            if(board[0][j] == 'O' && !vis[0][j])
             {
-                if (i==0 || j==0 || i==(n-1) || j==(m-1))
-                {
-                    if (board[i][j]=='O')
-                    {
-                        q.push({i,j});
-                        vis[i][j]=1;
-                    }
-                }    
+                vis[0][j] = 1;
+                dfs(0, j, vis, board, dr, dc);
+            }
+            
+            if(board[n-1][j] == 'O' && !vis[n-1][j])
+            {
+                vis[n-1][j] = 1;
+                dfs(n-1, j, vis, board, dr, dc);
             }
         }
         
-        int dx[]= {0, 1, 0, -1};
-        int dy[]= {1, 0, -1, 0};
-        
-        while (!q.empty())
+        // first col & last col
+        for (int i=0; i<n; i++)
         {
-            int x = q.front().first;
-            int y = q.front().second;
-            q.pop();
-            
-            for (int i=0; i<4; i++)
+            if(board[i][0] == 'O' && !vis[i][0])
             {
-                int nr= x+dx[i];
-                int nc= y+dy[i];
-                
-                if (nr>=0 && nr<n && nc>=0 && nc<m
-                    && !vis[nr][nc] && board[nr][nc]=='O' )
-                {
-                    vis[nr][nc]=1;
-                    q.push({nr,nc});
-                }
+                vis[i][0] = 1;
+                dfs(i, 0, vis, board, dr, dc);
+            }
+            
+            if(board[i][m-1] == 'O' && !vis[i][m-1])
+            {
+                vis[i][m-1] = 1;
+                dfs(i, m-1, vis, board, dr, dc);
             }
         }
         
