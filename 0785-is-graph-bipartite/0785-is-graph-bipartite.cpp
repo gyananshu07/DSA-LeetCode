@@ -1,13 +1,15 @@
 class Solution {
 private:
-    bool checkBipartite(int node, vector<int>& color, vector<vector<int>>& graph)
+    bool checkBipartite(int node, int col, vector<int>& color, vector<vector<int>>& graph)
     {
+        color[node] = col;
+        
         for(auto it: graph[node])
         {
             if(color[it] == -1)
             {
                 color[it] = 1-color[node];
-                if(checkBipartite(it, color, graph)==false)
+                if(checkBipartite(it, color[it], color, graph)==false)
                 {
                     return false;
                 }
@@ -30,7 +32,7 @@ public:
         {
             if(color[i] == -1)
             {
-                if(checkBipartite(i, color, graph) == false)
+                if(checkBipartite(i, 0, color, graph) == false)
                 {
                     return false;
                 }
