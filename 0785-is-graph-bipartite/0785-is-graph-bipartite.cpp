@@ -2,26 +2,19 @@ class Solution {
 private:
     bool checkBipartite(int node, vector<int>& color, vector<vector<int>>& graph)
     {
-        queue<int> q;
-        
-        q.push(node);
-        color[node] = 0;
-        
-        while(!q.empty()){
-            int curNode = q.front();
-            q.pop();
-            
-            for(auto it: graph[curNode])
+        for(auto it: graph[node])
+        {
+            if(color[it] == -1)
             {
-                if(color[it] == -1)
-                {
-                    color[it] = 1-color[curNode];
-                    q.push(it);
-                }
-                else if(color[it] == color[curNode])
+                color[it] = 1-color[node];
+                if(checkBipartite(it, color, graph)==false)
                 {
                     return false;
                 }
+            }
+            else if(color[it] == color[node])
+            {
+                return false;
             }
         }
         return true;
