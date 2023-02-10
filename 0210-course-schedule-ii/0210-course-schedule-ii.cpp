@@ -9,7 +9,7 @@ public:
         
         for(int i=0; i<prerequisites.size(); i++)
         {
-            adj[prerequisites[i][0]].push_back(prerequisites[i][1]);
+            adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
         }
 	    
 	    for(int i=0; i<V; i++)
@@ -45,8 +45,11 @@ public:
 	        }
 	    }
 	    
-        vector<int> ans;
-        reverse(topo.begin(), topo.end());
-	    return topo.size() == V ? topo : ans;
+        if(topo.size() == V)
+        {
+            return topo;
+        }
+        
+	    return {};
     }
 };
