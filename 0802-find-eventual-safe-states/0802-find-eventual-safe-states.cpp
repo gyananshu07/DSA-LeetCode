@@ -1,62 +1,45 @@
 class Solution {
-private:
-  bool dfs(int node, vector<int> &vis, vector<int> &pathVis, vector<int> &check, vector<int> adj[])
-  {
-      vis[node] = 1;
-      pathVis[node] = 1;
-      check[node] = 0;
-      
-      for(auto it: adj[node])
-      {
-          if(!vis[it])
-          {
-              if(dfs(it, vis, pathVis, check, adj) == true)
-              {
-                  check[node] = 0;
-                  return true;
-              }
-          }
-          else if(vis[it] == 1 && pathVis[it] == 1)
-          {
-              check[node] = 0;
-              return true;
-          }
-      }
-      
-      check[node] = 1;
-      pathVis[node] = 0;
-      
-      return false;
-  }
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
-        int V=graph.size(); // total number of rows present in graph
-        vector<int> adj[V];
+        int n = graph.size();
+        vector<int> adjRev[n], adj[n], safeNodes, indegree(n, 0);
         
-        for(int i=0;i<graph.size();i++){
-            for(int j=0;j<graph[i].size();j++){
-                adj[i].push_back(graph[i][j]);
-            }
-        }
-        
-        vector<int> vis(V, 0), pathVis(V, 0), check(V, 0), safeNodes;
-        
-        for(int i=0; i<V; i++)
+        for(int i=0; i<n; i++)
         {
-            if(!vis[i])
+            for(auto it: graph[i])
             {
-                dfs(i, vis, pathVis, check, adj);
+                adjRev[it].push_back(i);
+                indegree[i]++;
             }
         }
         
-        for(int i=0; i<V; i++)
+        queue<int> q;
+        for(int i=0; i<n; i++)
         {
-            if(check[i]==1)
+            if(indegree[i]==0)
             {
-                safeNodes.push_back(i);
+                q.push(i);
             }
         }
         
+        while(!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+            
+            safeNodes.push_back(node);
+            
+            for(auto it: adjRev[node])
+            {
+                indegree[it]--;
+                if(indegree[it]==0)
+                {
+                    q.push(it);
+                }
+            }
+        }
+        
+        sort(safeNodes.begin(), safeNodes.end());
         return safeNodes;
     }
 };
