@@ -9,9 +9,9 @@ public:
                 
         vector<pair<int, int>> adj[n];
         
-        for(auto it : flights)
+        for(int i=0; i<flights.size(); i++)
         {
-            adj[it[0]].push_back({it[1],it[2]});
+            adj[flights[i][0]].push_back({flights[i][1], flights[i][2]});
         }
         
         while(!q.empty())
