@@ -1,46 +1,93 @@
-class Solution {
-public:
-    void dfsGraph(int node, vector<int> &vis, vector<int> adj[])
+class DisjointSet
+{
+    public:
+        vector<int> rank, parent, size;
+    DisjointSet(int n)
     {
-        if(!vis[node])
+        rank.resize(n + 1, 0);
+        parent.resize(n + 1);
+        size.resize(n + 1);
+        for (int i = 0; i <= n; i++)
         {
-            vis[node] = 1;
-            
-            for(auto it: adj[node])
-            {
-                dfsGraph(it, vis, adj);
-            }
+            parent[i] = i;
+            size[i] = 1;
         }
     }
-    
-    
-    int findCircleNum(vector<vector<int>>& isConnected) {
-        int V = isConnected.size();
-        vector<int> adj[V];
-        
-        for(int i=0; i<V; i++){
-            for(int j=0; j<isConnected[0].size(); j++)
+
+    int findUPar(int node)
+    {
+        if (node == parent[node])
+            return node;
+        return parent[node] = findUPar(parent[node]);
+    }
+
+    void unionByRank(int u, int v)
+    {
+        int ulp_u = findUPar(u);
+        int ulp_v = findUPar(v);
+        if (ulp_u == ulp_v) return;
+        if (rank[ulp_u] < rank[ulp_v])
+        {
+            parent[ulp_u] = ulp_v;
+        }
+        else if (rank[ulp_v] < rank[ulp_u])
+        {
+            parent[ulp_v] = ulp_u;
+        }
+        else
+        {
+            parent[ulp_v] = ulp_u;
+            rank[ulp_u]++;
+        }
+    }
+
+    void unionBySize(int u, int v)
+    {
+        int ulp_u = findUPar(u);
+        int ulp_v = findUPar(v);
+        if (ulp_u == ulp_v) return;
+        if (size[ulp_u] < size[ulp_v])
+        {
+            parent[ulp_u] = ulp_v;
+            size[ulp_v] += size[ulp_u];
+        }
+        else
+        {
+            parent[ulp_v] = ulp_u;
+            size[ulp_u] += size[ulp_v];
+        }
+    }
+};
+
+class Solution
+{
+    public:
+        int findCircleNum(vector<vector < int>> &isConnected)
+        {
+            int V = isConnected.size();
+
+            DisjointSet ds(V);
+
+            for (int i = 0; i < isConnected.size(); i++)
             {
-                if(isConnected[i][j]==1 && i!=j)
+                for (int j = 0; j < isConnected[0].size(); j++)
                 {
-                    adj[i].push_back(j);
-                    adj[j].push_back(i);
+                    if (isConnected[i][j] == 1)
+                    {
+                        ds.unionBySize(i, j);
+                    }
                 }
             }
-        }
-        
-        vector<int> vis(V+1, 0);
-        int count=0;
-        
-        for(int i=0 ; i<V ; i++)
-        {
-            if(!vis[i])
+
+            int cnt = 0;
+            for (int i = 0; i < V; i++)
             {
-                count++;
-                dfsGraph(i, vis, adj);
+                if (ds.parent[i] == i)
+                {
+                    cnt++;
+                }
             }
+
+            return cnt;
         }
-        
-        return count;
-    }
 };
